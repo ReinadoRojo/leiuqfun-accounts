@@ -1,13 +1,11 @@
 import { Hono } from "hono"
+import { serveStatic } from "hono/bun"
 import { setCookie } from "hono/cookie"
 import { secureHeaders } from "hono/secure-headers"
 import { exportJWK, generateKeyPair } from "jose"
-import { api } from "@/routes/api"
-import { dashboard } from "@/routes/dashboard"
-import { serveStatic } from "hono/bun"
 import ErrorPage from "./pages/error"
+import { admin, api, dashboard } from "./routes"
 import { reactRender } from "./routes/common"
-import { admin } from "./routes/dashboard/admin"
 
 const app = new Hono()
 
