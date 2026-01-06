@@ -5,6 +5,12 @@ import DashboardIndex from "@/pages/dashboard/";
 
 const dashboard = new Hono()
 
+declare module '@hono/react-renderer' {
+  interface Props {
+    title: string
+  }
+}
+
 dashboard.get(
   '*',
   reactRenderer(({ children, title }) => {
@@ -24,18 +30,12 @@ dashboard.get(
         </body>
       </html>
     )
-  }, { stream: true, docType: true })
+  }, { stream: true })
 )
 
 dashboard.get("/", c => {
-    return c.render(DashboardIndex(), { title: "Dashboard" });
+  return c.render(<DashboardIndex />, { title: "Dashboard" });
 });
-
-declare module '@hono/react-renderer' {
-  interface Props {
-    title: string
-  }
-}
 
 
 export { dashboard };
