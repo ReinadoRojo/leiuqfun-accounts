@@ -10,7 +10,7 @@ type Link = {
 
 const links: Link[] = [
   {
-    href: "/dashboard",
+    href: "/",
     icon: <HouseIcon />,
     tooltip: "Dashboard",
   },
