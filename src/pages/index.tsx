@@ -11,7 +11,7 @@ export const Index = () => {
         state
       });
 
-      window.location.href = "/authorize?" + params.toString();
+      window.location.href = "/api/authorize?" + params.toString();
     }
   `
   return (
