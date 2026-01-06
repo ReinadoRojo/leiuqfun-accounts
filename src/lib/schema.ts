@@ -3,28 +3,28 @@ import { blob, index, int, sqliteTable, text, uniqueIndex } from "drizzle-orm/sq
 // Clerk like email system.
 
 export const emails = sqliteTable("emails", { 
-    id: text({ mode: 'text' }).$default(() => crypto.randomUUID()),
-    emailAddress: text({ mode: 'text' }).unique(),
-    verification: int({ mode: 'timestamp_ms' }),
-    createdAt: int({ mode: 'timestamp_ms' }).$default(() => new Date()),
+    id: text().primaryKey().$default(() => crypto.randomUUID()).notNull(),
+    emailAddress: text().unique().notNull(),
+    verification: int({ mode: 'timestamp_ms' }).notNull(),
+    createdAt: int({ mode: 'timestamp_ms' }).$default(() => new Date()).notNull(),
 });
 
 export const roles = sqliteTable("roles", {
-    id: text({ mode: 'text' }).$default(() => crypto.randomUUID()),
-    roleName: text({ mode: 'text' }).unique(),
-    rolePermissions: blob({ mode: 'json' }).$type<string[]>(),
-    createdAt: int({ mode: 'timestamp_ms' }).$default(() => new Date()),
+    id: text().primaryKey().$default(() => crypto.randomUUID()).notNull(),
+    roleName: text().unique().notNull(),
+    rolePermissions: blob({ mode: 'json' }).$type<string[]>().notNull(),
+    createdAt: int({ mode: 'timestamp_ms' }).$default(() => new Date()).notNull(),
 });
 
 export const users = sqliteTable("users", {
     id: text().primaryKey().$default(() => crypto.randomUUID()),
-    username: text({ mode: 'text' }),
-    password: text({ mode: 'text' }),
+    username: text(),
+    password: text(),
 
     role: text({ mode: "text" }).references(() => roles.id),   // FK for ID row on table roles
     
     emailAddresses: blob({ mode: 'json' }).$type<string[]>(),   // List of IDs for table emails
-    primaryEmailAddress: text({ mode: 'text' }).references(() => emails.id),
+    primaryEmailAddress: text().references(() => emails.id),
 
     createdAt: int({ mode: 'timestamp_ms' }).$default(() => new Date()),
 }, (t) => [
@@ -35,18 +35,18 @@ export const users = sqliteTable("users", {
 export const clients = sqliteTable("clients", {
     id: text().primaryKey().$default(() => crypto.randomUUID()),
     public_id: int({ mode: 'number' }).unique(),
-    name: text({ mode: 'text' }),
-    secret: text({ mode: 'text' }),
+    name: text(),
+    secret: text(),
     redirect_uris: blob({ mode: 'json' }).$type<string[]>(),
     createdAt: int({ mode: 'timestamp_ms' }).$default(() => new Date()),
 });
 
 export const exchangeCodes = sqliteTable("exchange_codes", {
-    id: text().primaryKey().$default(() => crypto.randomUUID()),
-    code: text({ mode: 'text' }).unique(),
-    client_id: text({ mode: 'text' }).references(() => clients.id),
-    user_id: text({ mode: 'text' }).references(() => users.id),
-    redirect_uri: text({ mode: 'text' }),
-    expiresAt: int({ mode: 'timestamp_ms' }),
-    createdAt: int({ mode: 'timestamp_ms' }).$default(() => new Date()),
+    id: text().primaryKey().$default(() => crypto.randomUUID()).notNull(),
+    code: text().unique(),
+    client_id: text().references(() => clients.id).notNull(),
+    user_id: text().references(() => users.id).notNull(),
+    redirect_uri: text().notNull(),
+    expiresAt: int({ mode: 'timestamp_ms' }).$default(() => new Date(Date.now() + 5 * 60 * 1000)).notNull(),
+    createdAt: int({ mode: 'timestamp_ms' }).$default(() => new Date(Date.now())).notNull(),
 });
