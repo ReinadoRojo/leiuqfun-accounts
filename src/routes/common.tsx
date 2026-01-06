@@ -1,3 +1,4 @@
+import { Sidebar } from "@/components/sidebar"
 import { reactRenderer } from "@hono/react-renderer"
 
 const reactRender = reactRenderer(({ children, title }) => {
@@ -12,10 +13,19 @@ const reactRender = reactRenderer(({ children, title }) => {
           <link href="/static/app.css" rel="stylesheet" type="text/css" />
         </head>
         <body className="bg-base-200 min-h-screen" data-theme="dark-apptheme">
-          {children}
+          <Sidebar />
+          <main className="h-full w-full pl-18">
+            {children}
+          </main>
         </body>
       </html>
     )
   }, { stream: true })
+
+declare module '@hono/react-renderer' {
+  interface Props {
+    title: string
+  }
+}
 
 export { reactRender }
