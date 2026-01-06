@@ -7,6 +7,7 @@ import { dashboard } from "@/routes/dashboard"
 import { serveStatic } from "hono/bun"
 import ErrorPage from "./pages/error"
 import { reactRender } from "./routes/common"
+import { admin } from "./routes/dashboard/admin"
 
 const app = new Hono()
 
@@ -57,10 +58,13 @@ app.get(
 )
 
 // Dashboard routes
-app.route('/dashboard', dashboard)
+app.route("/", dashboard)
 
 // API routes
 app.route('/api', api)
+
+// Admin routes
+app.route('/admin', admin)
 
 // 404 Page
 app.notFound(c => {
