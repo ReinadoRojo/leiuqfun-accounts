@@ -14,7 +14,7 @@ const reactRender = reactRenderer(({ children, title }) => {
         </head>
         <body className="bg-base-200 min-h-screen" data-theme="dark-apptheme">
           <Sidebar />
-          <main className="h-full w-full pl-18">
+          <main className="h-full w-full pl-28 py-8 pr-12">
             {children}
           </main>
         </body>
