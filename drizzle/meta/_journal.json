@@ -8,6 +8,13 @@
       "when": 1767609348690,
       "tag": "0000_chunky_mordo",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1767949818080,
+      "tag": "0001_far_jane_foster",
+      "breakpoints": true
     }
   ]
 }

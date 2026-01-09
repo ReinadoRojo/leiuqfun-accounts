@@ -1,9 +1,9 @@
 import { Sidebar } from "@/components/sidebar"
 import { reactRenderer } from "@hono/react-renderer"
 
-const reactRender = reactRenderer(({ children, title }) => {
+const reactRender = reactRenderer(({ children, title, removeSidebar, scripts }) => {
     return (
-      <html lang="en" data-theme="light-apptheme">
+      <html lang="en" data-theme="dark-apptheme">
         <head>
           <meta charSet="UTF-8" />
           <title>{title}</title>
@@ -13,10 +13,13 @@ const reactRender = reactRenderer(({ children, title }) => {
           <link href="/static/app.css" rel="stylesheet" type="text/css" />
         </head>
         <body className="bg-base-200 min-h-screen" data-theme="dark-apptheme">
-          <Sidebar />
+          {!removeSidebar && <Sidebar />}
           <main className="h-full w-full pl-28 py-8 pr-12">
             {children}
           </main>
+          {scripts && scripts.map((src, index) => (
+            <script key={index} src={src}></script>
+          ))}
         </body>
       </html>
     )
@@ -25,6 +28,8 @@ const reactRender = reactRenderer(({ children, title }) => {
 declare module '@hono/react-renderer' {
   interface Props {
     title: string
+    removeSidebar?: boolean
+    scripts?: string[]
   }
 }
 

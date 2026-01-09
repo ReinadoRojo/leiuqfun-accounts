@@ -1,15 +1,44 @@
 import { Hono } from "hono"
 import { serveStatic } from "hono/bun"
-import { setCookie } from "hono/cookie"
+import { getCookie, setCookie } from "hono/cookie"
 import { secureHeaders } from "hono/secure-headers"
 import { exportJWK, generateKeyPair } from "jose"
 import ErrorPage from "./pages/error"
-import { admin, api, dashboard } from "./routes"
+import { admin, api, auth, dashboard } from "./routes"
 import { reactRender } from "./routes/common"
 
 const app = new Hono()
 
 app.use(secureHeaders())
+
+app.use(async (c, next) => {
+  const authRoutes = ["/auth/login", "/auth/register"];
+  const publicRoutes = ["/about", "/contact", "/static", "/api"];
+
+  const sessionCookie = getCookie(c, "session")
+  const isAuthenticated = !!sessionCookie
+  const path = c.req.path
+
+  // Public Routes (no auth check)
+  if(publicRoutes.some(routes => path.startsWith(routes))) {
+    return await next()
+  }
+
+  // Auth Routes (only if not authenticated)
+  if(authRoutes.some(routes => path.startsWith(routes))) {
+    if(isAuthenticated) {
+      return c.redirect("/")
+    }
+    return await next()
+  }
+
+  // Private Routes (auth check)
+  if(!isAuthenticated) {
+    return c.redirect(`/auth/login?redirect_to=${encodeURIComponent(c.req.url)}`)
+  }
+
+  return await next()
+})
 
 export const { privateKey, publicKey } = await generateKeyPair("RS256")
 
@@ -54,6 +83,9 @@ app.get(
   '*',
   reactRender
 )
+
+// Auth routes
+app.route('/auth', auth)
 
 // Dashboard routes
 app.route("/", dashboard)

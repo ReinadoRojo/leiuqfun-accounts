@@ -1,17 +1,15 @@
 import { CirclePileIcon, DiamondPlusIcon, RadarIcon, TrashIcon, TriangleDashedIcon, UnlinkIcon, UserIcon } from "lucide-react";
 import { Fragment } from "react/jsx-runtime";
 
+type App = {
+  id: string;
+  name: string;
+  timestampAdded: Date;
+}
+
 export default function DashboardIndex() {
   // TODO: Fetch apps from api
-  const apps = [{
-    id: 'uuid-1',
-    name: 'App One',
-    timestampAdded: new Date(),
-  }, {
-    id: 'uuid-2',
-    name: 'App Two',
-    timestampAdded: new Date(),
-  }];
+  const apps: App[] = [];
   
   return (
     <section className="flex flex-row space-x-6 h-full">
